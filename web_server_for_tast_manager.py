@@ -20,6 +20,7 @@ import pickle
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib
 import json
+import sys
 
 memory_path = "memory"
 
@@ -115,7 +116,7 @@ class S(BaseHTTPRequestHandler):
         open_file.close()
 
 
-def run(server_class=HTTPServer, handler_class=S, port=80):
+def run(server_class=HTTPServer, handler_class=S, port=8000):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print('Starting httpd...')
@@ -127,6 +128,7 @@ def run(server_class=HTTPServer, handler_class=S, port=80):
 
 
 if __name__ == "__main__":
+
     memory = {b"today": [], b"manana": [], b"eow": [], b"future": []}
     if not os.path.exists(memory_path):
         file_ob = open(memory_path, 'wb')
