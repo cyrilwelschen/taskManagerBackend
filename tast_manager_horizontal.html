@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://getbootstrap.com/docs/4.0/examples/starter-template/starter-template.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+ </head>
+
+  <body>
+
+<!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">What's ToDo?</h4>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" value="Cyril" id="new-task-person-input"></input>
+	  <p> </p>
+	  <textarea 	type="text" class="form-control" placeholder="Task" id="new-task-task-input" rows="3" autofocus></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      Create: Click Header
+    </div>
+    <div class="col-sm">
+      Move: Drag & Drop
+    </div>
+    <div class="col-sm">
+      Delete: Double Click
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col">
+          <h1 id="today-h1">Today</h1>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">To</th>
+                <th scope="col">Task</th>
+              </tr>
+            </thead>
+            <tbody class="sortable" id="today-tbody">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col">
+          <h1 id="manana-h1">Manana</h1>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">To</th>
+                <th scope="col">Task</th>
+              </tr>
+            </thead>
+            <tbody class="sortable" id="manana-tbody">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col">
+          <h1 id="eow-h1">EoW</h1>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">To</th>
+                <th scope="col">Task</th>
+              </tr>
+            </thead>
+            <tbody class="sortable" id="eow-tbody">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col">
+          <h1 id="future-h1">Future</h1>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">To</th>
+                <th scope="col">Task</th>
+              </tr>
+            </thead>
+            <tbody class="sortable" id="future-tbody">
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+</body>
+
+</html>
+
+
+<script type="text/javascript">
+  $(function() {
+    $("#today-tbody, #manana-tbody, #eow-tbody, #future-tbody").sortable({
+      connectWith: ".sortable"
+    });
+    $("td").dblclick(function(e) {
+      deletElement($(this));
+    });
+    $("h1").click(function(e) {
+      createNew($(this));
+    });
+  });
+
+  function deletElement(element) {
+    element.remove();
+  };
+
+  function createNew(h1Id) {
+    var markup = "<tr ondblclick=deletElement($(this))><td>Me</td><td>Newly created</td></tr>";
+    
+    switch (h1Id.attr('id')) {
+      case "today-h1":
+        $("#today-tbody").append(markup);
+        $.post("http://127.0.0.1:8000", {suggest: "hello from the other side"})
+	alert("Send post request")
+        break;
+      case "manana-h1":
+        $("#manana-tbody").append(markup);
+        break;
+      case "eow-h1":
+        $("#eow-tbody").append(markup);
+        break;
+      case "future-h1":
+        $("#future-tbody").append(markup);
+        break;
+    }
+  };
+
+</script>
+
+<style>
+  .sortable {
+    list-style-type: none;
+    list-style-position: inside;
+    margin: 0px 12px 8px 0px;
+    padding: 2px;
+    min-height: 100px;
+  }
+
+  .sortable li {
+    margin: 0 3px 3px 3px;
+    border: 2px dashed #d3d3d3;
+    padding: 0.4em;
+    background-color: #eee
+  }
+
+  .row {
+    background: #f8f9fa;
+    margin-top: 20px;
+  }
+
+  .col {
+    border: solid 1px #6c757d;
+    padding: 10px;
+  }
+
+</style>
