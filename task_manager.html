@@ -1,29 +1,32 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://getbootstrap.com/docs/4.0/examples/starter-template/starter-template.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  </head>
-  <body>
-    <div class="modal fade" id="myModal" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">What's ToDo?</h4>
-          </div>
-          <div class="modal-body">
-            <input type="text" class="form-control" value="Cyril" id="person-input"></input>
-        	  <p> </p>
-        	  <input type="text" class="form-control" placeholder="Task" id="task-input"></input>
-            <input type="hidden" id="group-memory" value=""></input>
-          </div>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://getbootstrap.com/docs/4.0/examples/starter-template/starter-template.css" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">What's ToDo?</h4>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" placeholder="Task" id="task-input"></input>
+          <p> </p>
+          <input type="text" class="form-control" value="Cyril" id="person-input"></input>
+          <input type="hidden" id="group-memory" value=""></input>
         </div>
       </div>
     </div>
-    <font color="white">
+  </div>
+  <font color="white">
     <div class="modal fade" id="errorModal" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -76,7 +79,9 @@
         </table>
       </div>
       <div class="row">
-        <span><h1 id="eow-h1">EoW</h1></span>
+        <span>
+          <h1 id="eow-h1">EoW</h1>
+        </span>
         <table class="table table-hover">
           <thead>
             <tr>
@@ -102,34 +107,39 @@
         </table>
       </div>
     </div>
-    </font>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </font>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-  </body>
+</body>
+
 </html>
 
 <script type="text/javascript">
-  $(window).on("load", function() {
-    $.get("http://127.0.0.1:8000", function(data) {
-      console.log("Data"+data);
+  $(window).on("load", function () {
+    $.get("http://127.0.0.1:8000", function (data) {
+      console.log("Data" + data);
       constructTables(data);
     });
   });
-  $(document).on("dblclick", "td", function(e) {
+  $(document).on("dblclick", "td", function (e) {
     sendPost("delete", $(this).closest("tbody").attr('id'), $(this).closest("tr").index(), null, null);
     $(this).closest("tr").remove();
   });
 
-  $(function() {
-    $("#today, #manana, #eow, #future").sortable({connectWith: ".sortable"});
+  $(function () {
+    $("#today, #manana, #eow, #future").sortable({ connectWith: ".sortable" });
     $("#today, #manana, #eow, #future").sortable({
-      update: function(e) {
+      update: function (e) {
         var target = $(e.target);
         var children = target.children();
         var time = $(this).attr('id');
-        children.each(function(index) {
+        children.each(function (index) {
           var currentRow = $(this).children();
           var person = $(currentRow[0]).text();
           var msg = $(currentRow[1]).text();
@@ -137,25 +147,24 @@
         });
       }
     });
-    $("h1").click(function(e) {
-      setTimeout(function(){
-            $('#task-input').focus();
-        }, 200);
+    $("h1").click(function (e) {
+      setTimeout(function () {
+        $('#task-input').focus();
+      }, 200);
       $('#myModal').modal('show');
       $('#group-memory').val($(this).attr('id'));
     });
-    $('#task-input, #person-input').keypress(function(e) {
-      if(e.which == 13)
-        {
-          $('#myModal').modal('hide');
-          var person = $('#person-input').val();
-          var msg = $('#task-input').val();
-          var time = $('#group-memory').val().replace('-h1', '');
-          $('#task-input').val("");
-          $('#person-input').val("Cyril");
-          $("#"+time).append("<tr><td style='width: 20%'>"+person+"</td><td style='width: 80%'>"+msg+"</td></tr>");
-          sendPost("create", time, null, person, msg);
-        }
+    $('#task-input, #person-input').keypress(function (e) {
+      if (e.which == 13) {
+        $('#myModal').modal('hide');
+        var person = $('#person-input').val();
+        var msg = $('#task-input').val();
+        var time = $('#group-memory').val().replace('-h1', '');
+        $('#task-input').val("");
+        $('#person-input').val("Cyril");
+        $("#" + time).append("<tr><td style='width: 20%'>" + person + "</td><td style='width: 80%'>" + msg + "</td></tr>");
+        sendPost("create", time, null, person, msg);
+      }
     });
   });
 
@@ -163,20 +172,20 @@
     console.log("Constructing tables");
     //var data = {today: ["sammy", "cyril"], who: "hello you inside"};
     var elements = JSON.parse(data);
-    $.each(elements, function(k, v) {
+    $.each(elements, function (k, v) {
       console.log(k, v)
-      $(v).each(function(){
+      $(v).each(function () {
         var pers = $(this)[0];
         var task = $(this)[1];
-        console.log("Time :"+k, "Pers: "+pers, "Task "+task);
-        $("#"+k).append("<tr><td style='width: 20%'>"+pers+"</td><td style='width: 80%'>"+task+"</td></tr>");
+        console.log("Time :" + k, "Pers: " + pers, "Task " + task);
+        $("#" + k).append("<tr><td style='width: 20%'>" + pers + "</td><td style='width: 80%'>" + task + "</td></tr>");
       });
     });
   };
 
-  function sendPost(type, time, index, person, msg){
-    console.log(type+" "+time+" "+index+" "+person+" "+msg)
-    $.post("http://127.0.0.1:8000", {action: type, deadline: time, index: index, person: person, task: msg}).fail(function() {
+  function sendPost(type, time, index, person, msg) {
+    console.log(type + " " + time + " " + index + " " + person + " " + msg)
+    $.post("http://127.0.0.1:8000", { action: type, deadline: time, index: index, person: person, task: msg }).fail(function () {
       $('#errorModal').modal('show');
     });
   };
@@ -187,8 +196,15 @@
     padding-top: 10px;
     background: #333333;
   }
-  td {background: #404040;}
-  th {background: #1a1a1a;}
+
+  td {
+    background: #404040;
+  }
+
+  th {
+    background: #1a1a1a;
+  }
+
   .sortable {
     list-style-type: none;
     list-style-position: inside;
@@ -196,10 +212,17 @@
     padding: 2px;
     min-height: 100px;
   }
+
   .row {
     background: #333333;
     margin-top: 20px;
   }
-  .back-col {background: #333333;}
-  .error-modal {background: #ff0000;}
+
+  .back-col {
+    background: #333333;
+  }
+
+  .error-modal {
+    background: #ff0000;
+  }
 </style>
