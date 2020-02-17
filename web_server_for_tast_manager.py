@@ -37,8 +37,8 @@ class S(BaseHTTPRequestHandler):
         self._set_headers()
         get_msg = self.stringify(self.load())
         json_msg = json.dumps(get_msg)
-        print(json_msg)
-        msg = bytes(json_msg.replace("[", "popsicles_r").replace("]", "popsicles_l").replace("{", "[").replace("}", "]").replace("popsicles_r", "{").replace("popsicles_l", "}"), 'utf-8')
+        msg = bytes(json_msg.replace("[", "popsicles_r").replace("]", "popsicles_l").replace(
+            "{", "[").replace("}", "]").replace("popsicles_r", "{").replace("popsicles_l", "}"), 'utf-8')
         print(msg)
         self.wfile.write(bytes(json_msg, 'utf-8'))
 
@@ -47,14 +47,15 @@ class S(BaseHTTPRequestHandler):
         string_construct = {}
         for k, v in dic.items():
             if len(v) > 0:
-                string_construct[k.decode('utf-8')] = [[i[0].decode('utf-8'), i[1].decode('utf-8')] for i in v]
+                string_construct[k.decode('utf-8')] = [[i[0].decode('utf-8'), i[1].decode(
+                    'utf-8'), i[2].decode('utf-8'), i[3].decode('utf-8')] for i in v]
             else:
                 string_construct[k.decode('utf-8')] = []
         return string_construct
 
     def do_HEAD(self):
         self._set_headers()
-        
+
     def do_POST(self):
         self._set_headers()
         content = self.rfile.read(int(self.headers['Content-Length']))
@@ -64,13 +65,15 @@ class S(BaseHTTPRequestHandler):
         index = post[b'index'][0]
         person = post[b'person'][0]
         task = post[b'task'][0]
-        print("Got POST: ", action, deadline, index, person, task)
+        imp = post[b'importancy'][0]
+        job = post[b'job'][0]
+        print("Got POST: ", action, deadline, index, person, task, imp, job)
         if action == b"create":
             print("creating")
-            self.create_task(deadline, person, task)
+            self.create_task(deadline, person, task, imp, job)
         elif action == b"update":
             print("updating")
-            self.update_task(deadline, index, person, task)
+            self.update_task(deadline, index, person, task, imp, job)
         elif action == b"delete":
             print("deleting")
             self.delete_task(deadline, index)
@@ -79,9 +82,9 @@ class S(BaseHTTPRequestHandler):
 
         print("current: ", self.load())
 
-    def create_task(self, when, who, what):
+    def create_task(self, when, who, what, imp, job):
         mem = self.load()
-        mem[when].append([who, what])
+        mem[when].append([who, what, imp, job])
         self.save(mem)
 
     def delete_task(self, when, which):
@@ -89,12 +92,12 @@ class S(BaseHTTPRequestHandler):
         del mem[when][int(which)]
         self.save(mem)
 
-    def update_task(self, when, which, who, what):
+    def update_task(self, when, which, who, what, imp, job):
         mem = self.load()
         ind = int(which)
         if ind == 0:
             mem[when] = []
-        mem[when].append([who, what])
+        mem[when].append([who, what, imp, job])
         for time in mem.keys():
             if time != when:
                 for i in range(len(mem[time])):

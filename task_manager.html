@@ -12,7 +12,7 @@
 
 <body>
   <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width: whatever; height: whatever">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">What's ToDo?</h4>
@@ -22,6 +22,14 @@
           <p> </p>
           <input type="text" class="form-control" value="Cyril" id="person-input"></input>
           <input type="hidden" id="group-memory" value=""></input>
+          <p> </p>
+          <label for="how_important_input">How important?</label>
+          <a id="selected_importance_label"></a>
+          <input type="range" class="custom-range" min="1" max="5" id="how_important_input">
+          <p> </p>
+          <label for="how_much_your_job_input">How much your job?</label>
+          <a id="selected_how_much_job_label"></a>
+          <input type="range" class="custom-range" min="1" max="5" id="how_much_your_job_input">
         </div>
       </div>
     </div>
@@ -36,21 +44,6 @@
         </div>
       </div>
     </div>
-    <!--
-    <div class="container">
-      <div class="row">
-        <div class="col-sm back-col">
-          Create: Click Header
-        </div>
-        <div class="col-sm back-col">
-          Move: Drag & Drop
-        </div>
-        <div class="col-sm back-col">
-          Delete: Double Click
-        </div>
-      </div>
-    </div>
-    -->
     <div class="container">
       <div class="row">
         <h1 id="today-h1" data-toggle="modal" data-target="#myModal">Today</h1>
@@ -59,6 +52,8 @@
             <tr>
               <th scope="col">To</th>
               <th scope="col">Task</th>
+              <th scope="col">Importancy Rank</th>
+              <th scope="col">Job Rank</th>
             </tr>
           </thead>
           <tbody class="sortable" id="today">
@@ -72,6 +67,8 @@
             <tr>
               <th scope="col">To</th>
               <th scope="col">Task</th>
+              <th scope="col">Importancy Rank</th>
+              <th scope="col">Job Rank</th>
             </tr>
           </thead>
           <tbody class="sortable" id="manana">
@@ -87,6 +84,8 @@
             <tr>
               <th scope="col">To</th>
               <th scope="col">Task</th>
+              <th scope="col">Importancy Rank</th>
+              <th scope="col">Job Rank</th>
             </tr>
           </thead>
           <tbody class="sortable" id="eow">
@@ -100,6 +99,8 @@
             <tr>
               <th scope="col">To</th>
               <th scope="col">Task</th>
+              <th scope="col">Importancy Rank</th>
+              <th scope="col">Job Rank</th>
             </tr>
           </thead>
           <tbody class="sortable" id="future">
@@ -128,7 +129,7 @@
     });
   });
   $(document).on("dblclick", "td", function (e) {
-    sendPost("delete", $(this).closest("tbody").attr('id'), $(this).closest("tr").index(), null, null);
+    sendPost("delete", $(this).closest("tbody").attr('id'), $(this).closest("tr").index(), null, null, null, null);
     $(this).closest("tr").remove();
   });
 
@@ -143,7 +144,9 @@
           var currentRow = $(this).children();
           var person = $(currentRow[0]).text();
           var msg = $(currentRow[1]).text();
-          sendPost("update", time, index, person, msg);
+          var importancy = $(currentRow[2]).text();
+          var job_rank = $(currentRow[3]).text();
+          sendPost("update", time, index, person, msg, importancy, job_rank);
         });
       }
     });
@@ -160,10 +163,12 @@
         var person = $('#person-input').val();
         var msg = $('#task-input').val();
         var time = $('#group-memory').val().replace('-h1', '');
+        var job_ranking = $('#how_much_your_job_input').val();
+        var importancy_ranking = $('#how_important_input').val();
         $('#task-input').val("");
         $('#person-input').val("Cyril");
-        $("#" + time).append("<tr><td style='width: 20%'>" + person + "</td><td style='width: 80%'>" + msg + "</td></tr>");
-        sendPost("create", time, null, person, msg);
+        $("#" + time).append("<tr><td style='width: 20%'>" + person + "</td><td style='width: 60%'>" + msg + "</td><td style='width: 10%'>" + importancy_ranking + "</td><td style='width: 10%'>" + job_ranking + "</td></tr>");
+        sendPost("create", time, null, person, msg, importancy_ranking, job_ranking);
       }
     });
   });
@@ -177,15 +182,17 @@
       $(v).each(function () {
         var pers = $(this)[0];
         var task = $(this)[1];
+        var imp = $(this)[2];
+        var job = $(this)[3];
         console.log("Time :" + k, "Pers: " + pers, "Task " + task);
-        $("#" + k).append("<tr><td style='width: 20%'>" + pers + "</td><td style='width: 80%'>" + task + "</td></tr>");
+        $("#" + k).append("<tr><td style='width: 20%'>" + pers + "</td><td style='width: 60%'>" + task + "</td><td style='width: 10%'>" + imp + "</td><td style='width: 10%'>" + job + "</td></tr>");
       });
     });
   };
 
-  function sendPost(type, time, index, person, msg) {
-    console.log(type + " " + time + " " + index + " " + person + " " + msg)
-    $.post("http://127.0.0.1:8000", { action: type, deadline: time, index: index, person: person, task: msg }).fail(function () {
+  function sendPost(type, time, index, person, msg, importancy, job_ranking) {
+    console.log(type + " " + time + " " + index + " " + person + " " + msg + " " + importancy + " " + job_ranking);
+    $.post("http://127.0.0.1:8000", { action: type, deadline: time, index: index, person: person, task: msg, importancy: importancy, job: job_ranking }).fail(function () {
       $('#errorModal').modal('show');
     });
   };
